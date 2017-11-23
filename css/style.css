@@ -1,0 +1,38 @@
+#main {
+    padding: 10px;
+}
+
+circle {
+  fill-opacity: 1;
+}
+circle.hidden {
+  fill-opacity: .5;
+}
+
+circle.hovered {
+    fill-opacity: 1;
+}
+
+rect {
+    fill-opacity: .4;
+}
+rect.hovered {
+    fill-opacity: .75;
+}
+
+body {
+    font-family: "Open Sans";
+}
+
+.title h3 {
+    font-size: 20px;
+    font-weight: light;
+}
+
+a {
+    color: #555;
+    font-size: 13px;
+    text-decoration: underline;
+}
+
+
