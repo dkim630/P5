@@ -3,7 +3,7 @@ var svg = d3.select('svg');
 var svgWidth = +svg.attr('width');
 var svgHeight = +svg.attr('height');
 //Padding if needed
-var padding = {t: 40, r: 60, b: 40, l: 60};
+var padding = {t: 40, r: 60, b: 40, l: 90};
 //chartG set up
 var chartG = svg.append('g')
     .attr('transform', 'translate('+[padding.l, padding.t]+')');
@@ -66,7 +66,7 @@ function(error, dataset){
     chartG.append('g')
         .attr('class','x axis')
         .attr('transform', 'translate(' +[0,overviewHeight]+' )')
-        .call(d3.axisBottom(xScaleOverview).ticks(8));
+        .call(d3.axisBottom(xScaleOverview).ticks(5));
 
     var votedExtent = d3.extent(dataset, function(d) {
         return d['num_voted_users'];
@@ -76,8 +76,13 @@ function(error, dataset){
     chartG.append('g')
         .attr('class','y axis')
         .attr('transform', 'translate(' +[0,0]+' )')
-        .call(d3.axisLeft(yScaleOverview).ticks(10));
-
+        .call(d3.axisLeft(yScaleOverview).ticks(6));
+    chartG.append('text')
+        .attr('transform', 'translate(' + [overviewWidth/2-40,overviewHeight+40] + ')')
+        .text('Gross (USD)');
+    chartG.append('text')
+        .attr('transform', 'translate(' + [-60,overviewHeight/2+40] + ')rotate(270)')
+        .text('Number of Votes');
 
 });
 
