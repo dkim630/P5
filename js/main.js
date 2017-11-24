@@ -62,20 +62,18 @@ function(error, dataset){
         return d['gross'];
         });
     xScaleOverview.domain(grossExtent);
-    console.log(grossExtent);
     chartG.append('g')
         .attr('class','x axis')
-        .attr('transform', 'translate(' +[0,overviewHeight]+' )')
+        .attr('transform', 'translate(' +[0,overviewHeight+1]+' )')
         .call(d3.axisBottom(xScaleOverview).ticks(5));
 
     var votedExtent = d3.extent(dataset, function(d) {
         return d['num_voted_users'];
         });
-    console.log(votedExtent);
     yScaleOverview.domain(votedExtent);
     chartG.append('g')
         .attr('class','y axis')
-        .attr('transform', 'translate(' +[0,0]+' )')
+        .attr('transform', 'translate(' +[-2,0]+' )')
         .call(d3.axisLeft(yScaleOverview).ticks(6));
     chartG.append('text')
         .attr('transform', 'translate(' + [overviewWidth/2-40,overviewHeight+40] + ')')
@@ -83,6 +81,21 @@ function(error, dataset){
     chartG.append('text')
         .attr('transform', 'translate(' + [-60,overviewHeight/2+40] + ')rotate(270)')
         .text('Number of Votes');
+    var movies = chartG.selectAll('.dot')
+        .data(dataset);
+    var moviesEnter = movies.enter();
+    moviesEnter
+        .append('circle')
+        .attr('class','dots')
+        .attr('cy',function(d) {
+            return yScaleOverview(d['num_voted_users']);
+            })
+        .attr('cx',function(d) {
+            return xScaleOverview(d['gross']);
+            })
+        .attr('r',function(d) {
+            return 2;
+            });
 
 });
 
