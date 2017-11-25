@@ -13,6 +13,7 @@ var overviewWidth = 400;
 //scales
 var xScaleOverview = d3.scaleLinear().range([0,overviewWidth]);
 var yScaleOverview = d3.scaleLinear().range([overviewHeight,0]);
+var radiusScale = d3.scaleLinear().range([0,3]);
 //add more
 
 d3.csv('./data/movies-title-edited.csv',
@@ -85,7 +86,6 @@ function(error, dataset){
         .text('Number of Votes');
 
 
-
     clip = chartG.append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -107,7 +107,15 @@ function(error, dataset){
 
 
 
-    movies = view.selectAll('.dot')
+    var imdbExtent = d3.extent(dataset,function(d) {
+        return d['imdb_score'];
+        });
+    radiusScale.domain(imdbExtent);
+    
+//     var movies = chartG.selectAll('.dot')
+
+    var movies = view.selectAll('.dot')
+
         .data(dataset);
     moviesEnter = movies.enter()
         .append('circle')
@@ -122,7 +130,7 @@ function(error, dataset){
             return xScaleOverview(d['gross']);
             })
         .attr('r',function(d) {
-            return 2;
+            return radiusScale(d['imdb_score']);
             });
 
 
