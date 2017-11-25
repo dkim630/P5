@@ -15,7 +15,6 @@ var xScaleOverview = d3.scaleLinear().range([0,overviewWidth]);
 var yScaleOverview = d3.scaleLinear().range([overviewHeight,0]);
 //add more
 
-
 d3.csv('./data/movies-title-edited.csv',
 function(row){
     // This callback formats each row of the data
@@ -62,31 +61,60 @@ function(error, dataset){
         return d['gross'];
         });
     xScaleOverview.domain(grossExtent);
-    chartG.append('g')
+    xAxis = d3.axisBottom(xScaleOverview).ticks(5)
+    gX = chartG.append('g')
         .attr('class','x axis')
         .attr('transform', 'translate(' +[0,overviewHeight+1]+' )')
-        .call(d3.axisBottom(xScaleOverview).ticks(5));
+        .call(xAxis);
 
     var votedExtent = d3.extent(dataset, function(d) {
         return d['num_voted_users'];
         });
     yScaleOverview.domain(votedExtent);
-    chartG.append('g')
+
+    yAxis = d3.axisLeft(yScaleOverview).ticks(6)
+    gY = chartG.append('g')
         .attr('class','y axis')
         .attr('transform', 'translate(' +[-2,0]+' )')
-        .call(d3.axisLeft(yScaleOverview).ticks(6));
+        .call(yAxis);
     chartG.append('text')
         .attr('transform', 'translate(' + [overviewWidth/2-40,overviewHeight+40] + ')')
         .text('Gross (USD)');
     chartG.append('text')
         .attr('transform', 'translate(' + [-60,overviewHeight/2+40] + ')rotate(270)')
         .text('Number of Votes');
-    var movies = chartG.selectAll('.dot')
+
+
+
+    clip = chartG.append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", overviewWidth)
+        .attr("height", overviewHeight);
+
+    view = chartG.append("g")
+        .attr("class", "view")
+
+        .attr('clip-path', 'url(#clip)');
+
+    rect = view.append("rect")
+    .style("fill", "white")
+    .attr("width", overviewWidth - 1)
+    .attr("height", overviewHeight - 1);
+
+
+
+
+    movies = view.selectAll('.dot')
         .data(dataset);
-    var moviesEnter = movies.enter();
-    moviesEnter
+    moviesEnter = movies.enter()
         .append('circle')
-        .attr('class','dots')
+        .attr('class','dots');
+        // .attr('clip-path', 'url(#clip)');
+
+    moviesEnter
         .attr('cy',function(d) {
             return yScaleOverview(d['num_voted_users']);
             })
@@ -97,7 +125,26 @@ function(error, dataset){
             return 2;
             });
 
+
+
+    var zoom = d3.zoom()
+        .scaleExtent([1, 40])
+        .on("zoom", zoomed);
+
+    rect.call(zoom);
+
+
+
+
+
 });
+
+function zoomed() {
+    // view.attr("transform", d3.event.transform);
+    moviesEnter.attr("transform", d3.event.transform);
+    gX.call(xAxis.scale(d3.event.transform.rescaleX(xScaleOverview)));
+    gY.call(yAxis.scale(d3.event.transform.rescaleY(yScaleOverview)));
+}
 
 
 
