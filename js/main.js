@@ -13,6 +13,7 @@ var overviewWidth = 400;
 //scales
 var xScaleOverview = d3.scaleLinear().range([0,overviewWidth]);
 var yScaleOverview = d3.scaleLinear().range([overviewHeight,0]);
+var radiusScale = d3.scaleLinear().range([0,3]);
 //add more
 
 
@@ -81,6 +82,10 @@ function(error, dataset){
     chartG.append('text')
         .attr('transform', 'translate(' + [-60,overviewHeight/2+40] + ')rotate(270)')
         .text('Number of Votes');
+    var imdbExtent = d3.extent(dataset,function(d) {
+        return d['imdb_score'];
+        });
+    radiusScale.domain(imdbExtent);
     var movies = chartG.selectAll('.dot')
         .data(dataset);
     var moviesEnter = movies.enter();
@@ -94,7 +99,7 @@ function(error, dataset){
             return xScaleOverview(d['gross']);
             })
         .attr('r',function(d) {
-            return 2;
+            return radiusScale(d['imdb_score']);
             });
 
 });
