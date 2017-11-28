@@ -3,7 +3,7 @@ var svg = d3.select('svg');
 var svgWidth = +svg.attr('width');
 var svgHeight = +svg.attr('height');
 //Padding if needed
-var padding = {t: 40, r: 60, b: 40, l: 90};
+var padding = {t: 50, r: 60, b: 40, l: 90};
 //chartG set up
 var chartG = svg.append('g')
     .attr('transform', 'translate('+[padding.l, padding.t]+')');
@@ -136,7 +136,8 @@ function(error, dataset){
 
 
     var zoom = d3.zoom()
-        .scaleExtent([1, 40])
+        .scaleExtent([1, 5])
+        .translateExtent([[0, 0], [overviewWidth + 400, overviewHeight + 400]])
         .on("zoom", zoomed);
 
     rect.call(zoom);
