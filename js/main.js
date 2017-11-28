@@ -13,7 +13,7 @@ var overviewWidth = 400;
 //scales
 var xScaleOverview = d3.scaleLinear().range([0,overviewWidth]);
 var yScaleOverview = d3.scaleLinear().range([overviewHeight,0]);
-var radiusScale = d3.scaleLinear().range([0,3]);
+var radiusScale = d3.scaleLinear().range([0,2]);
 //add more
 
 d3.csv('./data/movies-title-edited.csv',
@@ -129,9 +129,43 @@ function(error, dataset){
         .attr('cx',function(d) {
             return xScaleOverview(d['gross']);
             })
+        .attr('fill', function(d) {
+            if(d['imdb_score'] <=1 ) {
+                return '#660000';
+                }
+            else if(d['imdb_score'] <= 2 ) {
+                return '#990000';
+            }
+            else if(d['imdb_score'] <= 3 ) {
+                return '#CC0000';
+            }
+            else if(d['imdb_score'] <= 4) {
+                return '#FF3300';
+            }
+            else if(d['imdb_score'] <= 5 ) {
+                return '#FF6600';
+            }
+            else if(d['imdb_score'] <= 6) {
+                return '#FFCC00';
+            }
+            else if(d['imdb_score'] <= 7) {
+                return '#FFFF00';
+            }
+            else if(d['imdb_score'] <= 8) {
+                return '#003300';
+            }
+            else if(d['imdb_score'] <= 9) {
+                return '#009900';
+            }
+            else if(d['imdb_score'] <= 10) {
+                return '#00FF00';
+            }
+            })
         .attr('r',function(d) {
-            return radiusScale(d['imdb_score']);
-            });
+            return 3;
+            })
+        .style('fill-opacity', 0.6)
+        .attr('stroke', 'black');
 
 
 
