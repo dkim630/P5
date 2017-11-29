@@ -1,6 +1,16 @@
 /*#main {*/
     /*padding: 10px;*/
 /*}*/
+#main {
+    float: left;
+}
+
+#hover {
+    position: relative;
+    top: 50px;
+    left: -480px;
+    pointer-events: none;
+}
 
 circle {
   fill-opacity: 1;
