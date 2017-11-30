@@ -212,6 +212,7 @@ function onCategoryChanged() {
     var select = d3.select('#categorySelect').node();
     var category = select.options[select.selectedIndex].value;
     d3.selectAll('.dot').remove();
+    chartG2.remove();
     // chartG.transition()
     //     .duration(1000)
     //     .call(zoom.transform, d3.zoomIdentity);
@@ -398,6 +399,8 @@ function updateChart(d,count) {
     //xScaleFB.domain([d['actor_1_name'], d['actor_2_name'], d['actor_3_name'], d['director_name']]);
     xScaleFB.domain(['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name']);
 
+    var tickLabels = ['Actor 1', 'Actor 2', 'Actor 3', 'Director'];
+
     var xAxis2 = d3.axisBottom(xScaleFB);
 
 
@@ -429,7 +432,16 @@ function updateChart(d,count) {
         chartG2.append('g')
             .attr('class', 'x axis2')
             .attr('transform', 'translate('+[0, fbHeight]+')')
-            .call(xAxis2);
+            .call(xAxis2.tickFormat(function(d) {
+                if (d != 'director_name') {
+                    return d.charAt(0).toUpperCase() + d.substring(1, 7).replace(/_/, ' ');
+                } else {
+                    console.log(d.split(1, d.indexOf('_'))[0]);
+                    console.log(d);
+
+                    return d.charAt(0).toUpperCase() + d.substring(1, d.indexOf('_'));
+                }
+            }));
 
         chartG2.append('g')
             .attr('class', 'y axis2')
