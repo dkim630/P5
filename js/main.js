@@ -9,8 +9,8 @@ var chartG = svg.append('g')
     .attr('transform', 'translate('+[padding.l, padding.t]+')');
 
 //Overview Chart Set Up
-var overviewHeight =400;
-var overviewWidth = 400;
+var overviewHeight = 600;
+var overviewWidth = 600;
 
 var fbHeight = 250;
 var fbWidth = 750;
@@ -27,6 +27,15 @@ var yScaleFB = d3.scaleLinear().range([fbHeight, 0]);
 //add more
 var hover = d3.select('#hover')
     .attr("class", "tip");
+//hover 2
+var hover2 = d3.select('#hover2')
+    .attr("class", "tip2");
+//global variables for bar graph
+var likes1 = [];
+var max1 = 0;
+var likes = [];
+
+
 
 d3.csv('./data/movies-title-edited.csv',
 function(row){
@@ -136,116 +145,8 @@ function(error, dataset){
         return d['imdb_score'];
         });
     radiusScale.domain(imdbExtent);
-    
-    // var movies = chartG.selectAll('.dot')
+
     filterChart("all");
-    // var movies = view.selectAll('.dot')
-    //
-    //     .data(dataset, function(d) {
-    //         return d.movie_title;
-    //     });
-    // moviesEnter = movies.enter()
-    //     .append('circle')
-    //     .attr('class','dots');
-    //     // .attr('clip-path', 'url(#clip)');
-    //
-    // moviesEnter
-    //     .attr('cy',function(d) {
-    //         return yScaleOverview(d['num_voted_users']);
-    //         })
-    //     .attr('cx',function(d) {
-    //         return xScaleOverview(d['gross']);
-    //         })
-    //     .attr('fill', function(d) {
-    //         if(d['imdb_score'] <=1 ) {
-    //             return '#660000';
-    //             }
-    //         else if(d['imdb_score'] <= 2 ) {
-    //             return '#990000';
-    //         }
-    //         else if(d['imdb_score'] <= 3 ) {
-    //             return '#CC0000';
-    //         }
-    //         else if(d['imdb_score'] <= 4) {
-    //             return '#FF3300';
-    //         }
-    //         else if(d['imdb_score'] <= 5 ) {
-    //             return '#FF6600';
-    //         }
-    //         else if(d['imdb_score'] <= 6) {
-    //             return '#FFCC00';
-    //         }
-    //         else if(d['imdb_score'] <= 7) {
-    //             return '#FFFF00';
-    //         }
-    //         else if(d['imdb_score'] <= 8) {
-    //             return '#003300';
-    //         }
-    //         else if(d['imdb_score'] <= 9) {
-    //             return '#009900';
-    //         }
-    //         else if(d['imdb_score'] <= 10) {
-    //             return '#00FF00';
-    //         }
-    //         })
-    //     .attr('r',function(d) {
-    //         return 3;
-    //         })
-    //
-    //     .on("mouseover", function(d) {
-    //         hover.transition()
-    //             .duration(1000)
-    //             .style("visibility", "visible");
-    //         hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
-    //             "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
-    //             "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
-    //             "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
-    //             "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
-    //             "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
-    //             "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
-    //             "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
-    //             "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
-    //             "<strong>Duration: </strong>" + d['duration'] +"<br />" +
-    //             "<strong>Gross: </strong>" + d['gross'] +"<br />" +
-    //             "<strong>Genres: </strong>" + d['genres'] +"<br />" +
-    //             "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
-    //             "<strong>Country: </strong>" + d['country'] +"<br />" +
-    //             // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
-    //             // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
-    //             "<strong>Content Rating: </strong>" + d['content_rating'] +"<br />" +
-    //             "<strong>Budget: </strong>" + d['budget'] +"<br />" +
-    //             "<strong>Title Year: </strong>" + d['title_year'] +"<br />" +
-    //             "<strong>IMDB Score: </strong>" + d['imdb_score'] +"<br />" +
-    //             "<strong>Movie Facebook Likes: </strong>" + d['movie_facebook_likes'] +"<br />" +
-    //             "<strong>Number of Voted Users: </strong>" + d['num_voted_users'] +"<br />" +
-    //             "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
-    //             "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
-    //
-    //             chartG2 = svg.append('g')
-    //             .attr('transform', 'translate('+[padding.l, overviewHeight + padding.t + 100]+')');
-    //             updateChart(d);
-    //
-    //             chartG2.style("visibility", "visible");
-    //             // .style("left", (d3.event.pageX) + "px")
-    //             // .style("top", (d3.event.pageY - 50) + "px");
-    //     })
-    //     .on("mouseout", function(d) {
-    //         hover.transition()
-    //             .duration(1000)
-    //             .style("visibility", "hidden");
-    //
-    //         chartG2.remove();
-    //     })
-    //     .style('fill-opacity', 0.6)
-    //     .attr('stroke', 'black');
-
-
-
-
-
-
-
-
 
 });
 
@@ -313,6 +214,7 @@ function onCategoryChanged() {
 }
 
 function filterChart(category) {
+
     var filtered = movieData.filter(function(d) {
         if (category == "low") {
             return d.imdb_score >= 0 && d.imdb_score < 5;
@@ -324,16 +226,21 @@ function filterChart(category) {
             return true;
         }
     })
+    // var movies = chartG.selectAll('.dot')
 
-    movies = view.selectAll('.dot')
+    var movies = view.selectAll('.dot')
         .data(filtered, function(d) {
             return d.movie_title;
         });
 
     moviesEnter = movies.enter()
         .append('circle')
+
         .attr('class','dot');
-    // .attr('clip-path', 'url(#clip)');
+
+    //set up
+    var initalized = false;
+    var clickCounter = 0;
 
     moviesEnter
         .attr('cy',function(d) {
@@ -377,55 +284,180 @@ function filterChart(category) {
         .attr('r',function(d) {
             return 3;
         })
+        .on("click", function(d) {
 
-        .on("mouseover", function(d) {
-            hover.transition()
-                .duration(1000)
-                .style("visibility", "visible");
-            hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
-                "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
-                "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
-                "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
-                "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
-                "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
-                "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
-                "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
-                "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
-                "<strong>Duration: </strong>" + d['duration'] +"<br />" +
-                "<strong>Gross: </strong>" + d['gross'] +"<br />" +
-                "<strong>Genres: </strong>" + d['genres'] +"<br />" +
-                "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
-                "<strong>Country: </strong>" + d['country'] +"<br />" +
-                // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
-                // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
-                "<strong>Content Rating: </strong>" + d['content_rating'] +"<br />" +
-                "<strong>Budget: </strong>" + d['budget'] +"<br />" +
-                "<strong>Title Year: </strong>" + d['title_year'] +"<br />" +
-                "<strong>IMDB Score: </strong>" + d['imdb_score'] +"<br />" +
-                "<strong>Movie Facebook Likes: </strong>" + d['movie_facebook_likes'] +"<br />" +
-                "<strong>Number of Voted Users: </strong>" + d['num_voted_users'] +"<br />" +
-                "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
-                "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
-
-            chartG2 = svg.append('g')
+            if (clickCounter == 0) {
+                if (initalized == true) {
+                    chartG2.remove();
+                    }
+                console.log(clickCounter);
+                clickCounter++;
+                hover.transition()
+                    .duration(1000)
+                    .style("visibility", "visible");
+                hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
+                    "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
+                    "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+                    "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
+                    "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+                    "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
+                    "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+                    "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
+                    "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+                    "<strong>Duration: </strong>" + d['duration'] +"<br />" +
+                    "<strong>Gross: </strong>" + d['gross'] +"<br />" +
+                    "<strong>Genres: </strong>" + d['genres'] +"<br />" +
+                    "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
+                    "<strong>Country: </strong>" + d['country'] +"<br />" +
+                    // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
+                    // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
+                    "<strong>Content Rating: </strong>" + d['content_rating'] +"<br />" +
+                    "<strong>Budget: </strong>" + d['budget'] +"<br />" +
+                    "<strong>Title Year: </strong>" + d['title_year'] +"<br />" +
+                    "<strong>IMDB Score: </strong>" + d['imdb_score'] +"<br />" +
+                    "<strong>Movie Facebook Likes: </strong>" + d['movie_facebook_likes'] +"<br />" +
+                    "<strong>Number of Voted Users: </strong>" + d['num_voted_users'] +"<br />" +
+                    "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
+                    "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
+                chartG2 = svg.append('g')
                 .attr('transform', 'translate('+[padding.l, overviewHeight + padding.t + 100]+')');
-            updateChart(d);
+                updateChart(d,clickCounter);
+                initalized = true;
+                chartG2.style("visibility", "visible");
+            }
+            else if (clickCounter == 1) {
+                clickCounter=0;
+                updateChart(d,clickCounter);
+                    hover2.transition()
+                        .duration(1000)
+                        .style("visibility", "visible");
+                    hover2.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
+                        "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
+                        "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+                        "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
+                        "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+                        "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
+                        "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+                        "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
+                        "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+                        "<strong>Duration: </strong>" + d['duration'] +"<br />" +
+                        "<strong>Gross: </strong>" + d['gross'] +"<br />" +
+                        "<strong>Genres: </strong>" + d['genres'] +"<br />" +
+                        "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
+                        "<strong>Country: </strong>" + d['country'] +"<br />" +
+                        // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
+                        // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
+                        "<strong>Content Rating: </strong>" + d['content_rating'] +"<br />" +
+                        "<strong>Budget: </strong>" + d['budget'] +"<br />" +
+                        "<strong>Title Year: </strong>" + d['title_year'] +"<br />" +
+                        "<strong>IMDB Score: </strong>" + d['imdb_score'] +"<br />" +
+                        "<strong>Movie Facebook Likes: </strong>" + d['movie_facebook_likes'] +"<br />" +
+                        "<strong>Number of Voted Users: </strong>" + d['num_voted_users'] +"<br />" +
+                        "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
+                        "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
 
-            chartG2.style("visibility", "visible");
+            }
             // .style("left", (d3.event.pageX) + "px")
             // .style("top", (d3.event.pageY - 50) + "px");
         })
-        .on("mouseout", function(d) {
-            hover.transition()
-                .duration(1000)
-                .style("visibility", "hidden");
-
-            chartG2.remove();
-        })
         .style('fill-opacity', 0.6)
         .attr('stroke', 'black');
+        movies.exit().remove();
 
-    movies.exit().remove();
+};
+
+function zoomed() {
+    // view.attr("transform", d3.event.transform);
+    moviesEnter.attr("transform", d3.event.transform);
+    gX.call(xAxis.scale(d3.event.transform.rescaleX(xScaleOverview)));
+    gY.call(yAxis.scale(d3.event.transform.rescaleY(yScaleOverview)));
+}
+
+
+
+function updateChart(d,count) {
+    //xScaleFB.domain([d['actor_1_name'], d['actor_2_name'], d['actor_3_name'], d['director_name']]);
+    xScaleFB.domain(['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name']);
+
+    var xAxis2 = d3.axisBottom(xScaleFB);
+
+
+    if (count == 1) {
+        likes1.push(d.actor_1_facebook_likes);
+        likes1.push(d.actor_2_facebook_likes);
+        likes1.push(d.actor_3_facebook_likes);
+        likes1.push(d.director_facebook_likes);
+        max1 = d3.max(likes1);
+    }
+
+
+
+    if (count == 0) {
+        likes.push(d.actor_1_facebook_likes);
+        likes.push(d.actor_2_facebook_likes);
+        likes.push(d.actor_3_facebook_likes);
+        likes.push(d.director_facebook_likes);
+        if(d3.max(likes) > max1) {
+            max1 = d3.max(likes);
+            }
+    }
+
+
+
+    if (count == 0) {
+        yScaleFB.domain([0, max1]);
+        var yAxis2 = d3.axisLeft(yScaleFB).ticks(5);
+        chartG2.append('g')
+            .attr('class', 'x axis2')
+            .attr('transform', 'translate('+[0, fbHeight]+')')
+            .call(xAxis2);
+
+        chartG2.append('g')
+            .attr('class', 'y axis2')
+            .call(yAxis2);
+
+        chartG2.append('text')
+            .attr('transform', 'translate(' + [fbWidth/2 -40, fbHeight+40] + ')')
+            .text('Actors and Director');
+
+        chartG2.append('text')
+            .attr('transform', 'translate(' + [-60,fbHeight/2 + 40] + ')rotate(270)')
+            .text('Facebook Likes');
+
+        likeTypes = ['actor_1_facebook_likes', 'actor_2_facebook_likes', 'actor_3_facebook_likes', 'director_facebook_likes'];
+        castNames = ['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name'];
+        indices = [0, 1, 2, 3];
+        colors = ['#D52727', '#2BA02D', '#2079B5', '#FF800F'];
+
+        chartG2.selectAll('.bars')
+            .data(indices)
+            .enter()
+            .append('rect')
+            .attr('class', 'bars')
+            .attr('x', function(index) {return -20 + xScaleFB(castNames[index]) + xScaleFB.bandwidth()/2 - 15;})
+            .attr('y', function(index) {return yScaleFB(likes1[index])})
+            .attr('width', 30)
+            .attr('height', function(index) {return fbHeight - yScaleFB(likes1[index]);})
+            .attr('fill', function(index) {return colors[index];});
+
+        chartG2.selectAll('.bars2')
+            .data(indices)
+            .enter()
+            .append('rect')
+            .attr('class', 'bars2')
+            .attr('x', function(index) {return 25 + xScaleFB(castNames[index]) + xScaleFB.bandwidth()/2 - 15;})
+            .attr('y', function(index) {return yScaleFB(likes[index])})
+            .attr('width', 30)
+            .attr('height', function(index) {return fbHeight - yScaleFB(likes[index]);})
+            .attr('fill', function(index) {return colors[index];});
+
+         likes1 = [];
+         max1 = 0;
+         likes = [];
+
+    }
+
+
 }
 
 
