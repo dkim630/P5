@@ -517,7 +517,7 @@ function updateChart2(d,count) {
     if (count == 0) {
         likes3.push(d.budget);
         likes3.push(d.gross);
-        if(d3.max(likes) > max1) {
+        if(d3.max(likes3) > max2) {
             max2 = d3.max(likes3);
             }
     }
