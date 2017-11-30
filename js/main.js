@@ -133,13 +133,14 @@ function(error, dataset){
         .on('mouseover', null)
         .on('mouseout', null);
 
-    var zoom = d3.zoom()
+    zoom = d3.zoom()
         .scaleExtent([1, 5])
-        .translateExtent([[0, 0], [overviewWidth + 400, overviewHeight + 400]])
+        .translateExtent([[0, 0], [overviewWidth + 1200, overviewHeight + 600]])
         .on("zoom", zoomed);
 
-    rect.call(zoom);
-
+    view.call(zoom);
+    // rect.call(zoom);
+    // svg.call(zoom);
 
     var imdbExtent = d3.extent(dataset,function(d) {
         return d['imdb_score'];
@@ -151,10 +152,10 @@ function(error, dataset){
 });
 
 function zoomed() {
-    // view.attr("transform", d3.event.transform);
+    // rect.attr("transform", d3.event.transform);
     gX.call(xAxis.scale(d3.event.transform.rescaleX(xScaleOverview)));
     gY.call(yAxis.scale(d3.event.transform.rescaleY(yScaleOverview)));
-    moviesEnter.attr("transform", d3.event.transform);
+    movies.merge(moviesEnter).attr("transform", d3.event.transform);
 
 }
 
@@ -210,7 +211,23 @@ function updateChart(d) {
 function onCategoryChanged() {
     var select = d3.select('#categorySelect').node();
     var category = select.options[select.selectedIndex].value;
+    d3.selectAll('.dot').remove();
+    // chartG.transition()
+    //     .duration(1000)
+    //     .call(zoom.transform, d3.zoomIdentity);
     filterChart(category);
+    // zoom = d3.zoom()
+    //     .scaleExtent([1, 5])
+    //     .translateExtent([[0, 0], [overviewWidth + 1200, overviewHeight + 600]])
+    //     .on("zoom", zoomed);
+    //
+    // view.call(zoom);
+    // chartG.call(zoom);
+
+    view.transition()
+        .duration(500)
+        .call(zoom.transform, d3.zoomIdentity);
+
 }
 
 function filterChart(category) {
@@ -226,16 +243,16 @@ function filterChart(category) {
             return true;
         }
     })
+    console.log(filtered);
     // var movies = chartG.selectAll('.dot')
 
-    var movies = view.selectAll('.dot')
+    movies = view.selectAll('.dot')
         .data(filtered, function(d) {
             return d.movie_title;
         });
 
     moviesEnter = movies.enter()
         .append('circle')
-
         .attr('class','dot');
 
     //set up
@@ -362,6 +379,8 @@ function filterChart(category) {
         })
         .style('fill-opacity', 0.6)
         .attr('stroke', 'black');
+
+
         movies.exit().remove();
 
 };
