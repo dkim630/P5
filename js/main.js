@@ -176,8 +176,12 @@ function onCategoryChanged() {
     var select = d3.select('#categorySelect').node();
     var category = select.options[select.selectedIndex].value;
     d3.selectAll('.dot').remove();
-    chartG2.remove();
-    chartG3.remove();
+    if (typeof chartG2 != 'undefined') {
+        chartG2.remove();
+    }
+    if (typeof chartG3 != 'undefined') {
+        chartG3.remove();
+    }
     // chartG.transition()
     //     .duration(1000)
     //     .call(zoom.transform, d3.zoomIdentity);

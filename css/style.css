@@ -5,16 +5,21 @@
     float: left;
 }
 
+h3 {
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
 #hover {
     position: fixed;
-    top: 50px;
+    top: 120px;
     left: 800px;
     pointer-events: none;
 }
 
 #hover2 {
     position: fixed;
-    top: 50px;
+    top: 120px;
     left: 1250px;
     pointer-events: none;
 }
