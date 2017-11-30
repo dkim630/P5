@@ -24,6 +24,9 @@ var radiusScale = d3.scaleLinear().range([0,2]);
 
 var xScaleFB = d3.scaleBand().rangeRound([0, fbWidth], .1);
 var yScaleFB = d3.scaleLinear().range([fbHeight, 0]);
+
+var xScaleMoney = d3.scaleBand().rangeRound([0, fbWidth/2], .1);
+var yScaleMoney = d3.scaleLinear().range([fbHeight, 0]);
 //add more
 var hover = d3.select('#hover')
     .attr("class", "tip");
@@ -34,7 +37,10 @@ var hover2 = d3.select('#hover2')
 var likes1 = [];
 var max1 = 0;
 var likes = [];
-
+var title1 = '';
+var likes2 = [];
+var likes3 = [];
+var max2 = 0;
 
 
 d3.csv('./data/movies-title-edited.csv',
@@ -80,6 +86,15 @@ function(error, dataset){
 
     console.log(dataset);
 
+    //set up background boxes
+    chartG.append('rect')
+    .style('fill','grey')
+    .attr('width', overviewWidth+150)
+    .attr('height', overviewHeight+120)
+    .attr('y', -50)
+    .attr('x', -100)
+
+
     //axis setup for first overview dot plot
     var grossExtent = d3.extent(dataset, function(d) {
         return d['gross'];
@@ -107,8 +122,6 @@ function(error, dataset){
     chartG.append('text')
         .attr('transform', 'translate(' + [-60,overviewHeight/2+40] + ')rotate(270)')
         .text('Number of Votes');
-
-
 
 
     view = chartG.append("g")
@@ -159,60 +172,12 @@ function zoomed() {
 
 }
 
-function updateChart(d) {
-    xScaleFB.domain([d['actor_1_name'], d['actor_2_name'], d['actor_3_name'], d['director_name']]);
-    var xAxis2 = d3.axisBottom(xScaleFB);
-
-    chartG2.append('g')
-        .attr('class', 'x axis2')
-        .attr('transform', 'translate('+[0, fbHeight]+')')
-        .call(xAxis2);
-
-    var likes = [];
-    likes.push(d.actor_1_facebook_likes);
-    likes.push(d.actor_2_facebook_likes);
-    likes.push(d.actor_3_facebook_likes);
-    likes.push(d.director_facebook_likes);
-
-    var maxLikes = d3.max(likes);
-
-    yScaleFB.domain([0, maxLikes]);
-    var yAxis2 = d3.axisLeft(yScaleFB).ticks(4);
-
-    chartG2.append('g')
-        .attr('class', 'y axis2')
-        .call(yAxis2);
-
-    chartG2.append('text')
-        .attr('transform', 'translate(' + [fbWidth/2 -40, fbHeight+40] + ')')
-        .text('Actors and Director');
-
-    chartG2.append('text')
-        .attr('transform', 'translate(' + [-60,fbHeight/2 + 40] + ')rotate(270)')
-        .text('Facebook Likes');
-
-    likeTypes = ['actor_1_facebook_likes', 'actor_2_facebook_likes', 'actor_3_facebook_likes', 'director_facebook_likes'];
-    castNames = ['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name'];
-    indices = [0, 1, 2, 3];
-    colors = ['#D52727', '#2BA02D', '#2079B5', '#FF800F'];
-
-    chartG2.selectAll('.bar')
-        .data(indices)
-        .enter()
-        .append('rect')
-        .attr('class', 'bar')
-        .attr('x', function(index) {return xScaleFB(d[castNames[index]]) + xScaleFB.bandwidth()/2 - 15;})
-        .attr('y', function(index) {return yScaleFB(d[likeTypes[index]])})
-        .attr('width', 30)
-        .attr('height', function(index) {return fbHeight - yScaleFB(d[likeTypes[index]]);})
-        .attr('fill', function(index) {return colors[index];});
-}
-
 function onCategoryChanged() {
     var select = d3.select('#categorySelect').node();
     var category = select.options[select.selectedIndex].value;
     d3.selectAll('.dot').remove();
     chartG2.remove();
+    chartG3.remove();
     // chartG.transition()
     //     .duration(1000)
     //     .call(zoom.transform, d3.zoomIdentity);
@@ -307,6 +272,7 @@ function filterChart(category) {
             if (clickCounter == 0) {
                 if (initalized == true) {
                     chartG2.remove();
+                    chartG3.remove();
                     }
                 console.log(clickCounter);
                 clickCounter++;
@@ -315,17 +281,17 @@ function filterChart(category) {
                     .style("visibility", "visible");
                 hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
                     "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
-                    "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+                    //"<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
                     "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
-                    "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+                    //"<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
                     "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
-                    "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+                    //"<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
                     "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
-                    "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+                   // "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
                     "<strong>Duration: </strong>" + d['duration'] +"<br />" +
                     "<strong>Gross: </strong>" + d['gross'] +"<br />" +
                     "<strong>Genres: </strong>" + d['genres'] +"<br />" +
-                    "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
+                    //"<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
                     "<strong>Country: </strong>" + d['country'] +"<br />" +
                     // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
                     // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
@@ -340,28 +306,34 @@ function filterChart(category) {
                 chartG2 = svg.append('g')
                 .attr('transform', 'translate('+[padding.l, overviewHeight + padding.t + 100]+')');
                 updateChart(d,clickCounter);
+                chartG3 = svg.append('g')
+                .attr('transform', 'translate('+[padding.l+fbWidth+100, overviewHeight + padding.t + 100]+')');
+                updateChart2(d,clickCounter);
                 initalized = true;
                 chartG2.style("visibility", "visible");
+                chartG3.style("visibility", "visible");
+
             }
             else if (clickCounter == 1) {
                 clickCounter=0;
                 updateChart(d,clickCounter);
+                updateChart2(d,clickCounter);
                     hover2.transition()
                         .duration(1000)
                         .style("visibility", "visible");
                     hover2.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
                         "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
-                        "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+                        //"<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
                         "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
-                        "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+                        //"<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
                         "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
-                        "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+                        //"<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
                         "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
-                        "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+                        //"<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
                         "<strong>Duration: </strong>" + d['duration'] +"<br />" +
                         "<strong>Gross: </strong>" + d['gross'] +"<br />" +
                         "<strong>Genres: </strong>" + d['genres'] +"<br />" +
-                        "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
+                        //"<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
                         "<strong>Country: </strong>" + d['country'] +"<br />" +
                         // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
                         // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
@@ -397,7 +369,7 @@ function zoomed() {
 
 function updateChart(d,count) {
     //xScaleFB.domain([d['actor_1_name'], d['actor_2_name'], d['actor_3_name'], d['director_name']]);
-    xScaleFB.domain(['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name']);
+    xScaleFB.domain(['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name', 'cast_total_facebook_likes']);
 
     var tickLabels = ['Actor 1', 'Actor 2', 'Actor 3', 'Director'];
 
@@ -409,6 +381,8 @@ function updateChart(d,count) {
         likes1.push(d.actor_2_facebook_likes);
         likes1.push(d.actor_3_facebook_likes);
         likes1.push(d.director_facebook_likes);
+        likes1.push(d.cast_total_facebook_likes);
+        title1 = d['movie_title'];
         max1 = d3.max(likes1);
     }
 
@@ -419,6 +393,7 @@ function updateChart(d,count) {
         likes.push(d.actor_2_facebook_likes);
         likes.push(d.actor_3_facebook_likes);
         likes.push(d.director_facebook_likes);
+        likes.push(d.cast_total_facebook_likes);
         if(d3.max(likes) > max1) {
             max1 = d3.max(likes);
             }
@@ -433,6 +408,10 @@ function updateChart(d,count) {
             .attr('class', 'x axis2')
             .attr('transform', 'translate('+[0, fbHeight]+')')
             .call(xAxis2.tickFormat(function(d) {
+
+                if (d == 'cast_total_facebook_likes') {
+                    return 'Cast Total';
+                }
                 if (d != 'director_name') {
                     return d.charAt(0).toUpperCase() + d.substring(1, 7).replace(/_/, ' ');
                 } else {
@@ -448,17 +427,43 @@ function updateChart(d,count) {
             .call(yAxis2);
 
         chartG2.append('text')
-            .attr('transform', 'translate(' + [fbWidth/2 -40, fbHeight+40] + ')')
-            .text('Actors and Director');
+            .attr('transform', 'translate(' + [fbWidth/2 -60, fbHeight+40] + ')')
+            .text('Cast');
+
+        chartG2.append('rect')
+            .attr('width', 20)
+            .attr('height', 20)
+            .attr('x', 30)
+            .attr('fill', '#D52727')
+            .attr('y', fbHeight + 40);
+
+        chartG2.append('rect')
+            .attr('width', 20)
+            .attr('height', 20)
+            .attr('x', 30)
+            .attr('fill', 'purple')
+            .attr('y', fbHeight + 65);
+
+
+        chartG2.append('text')
+            .attr('transform', 'translate(' + [60, fbHeight+57] + ')')
+            .text(title1);
+
+        chartG2.append('text')
+            .attr('transform', 'translate(' + [60, fbHeight+77] + ')')
+            .text(function(b) {
+                return d['movie_title'];
+                });
+
 
         chartG2.append('text')
             .attr('transform', 'translate(' + [-60,fbHeight/2 + 40] + ')rotate(270)')
             .text('Facebook Likes');
 
-        likeTypes = ['actor_1_facebook_likes', 'actor_2_facebook_likes', 'actor_3_facebook_likes', 'director_facebook_likes'];
-        castNames = ['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name'];
-        indices = [0, 1, 2, 3];
-        colors = ['#D52727', '#2BA02D', '#2079B5', '#FF800F'];
+        likeTypes = ['actor_1_facebook_likes', 'actor_2_facebook_likes', 'actor_3_facebook_likes', 'director_facebook_likes','cast_total_facebook_likes'];
+        castNames = ['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name', 'cast_total_facebook_likes' ];
+        indices = [0, 1, 2, 3, 4];
+        //scolors = ['#D52727', '#2BA02D', '#2079B5', '#FF800F', 'purple'];
 
         chartG2.selectAll('.bars')
             .data(indices)
@@ -469,7 +474,7 @@ function updateChart(d,count) {
             .attr('y', function(index) {return yScaleFB(likes1[index])})
             .attr('width', 30)
             .attr('height', function(index) {return fbHeight - yScaleFB(likes1[index]);})
-            .attr('fill', function(index) {return colors[index];});
+            .attr('fill', '#D52727');
 
         chartG2.selectAll('.bars2')
             .data(indices)
@@ -480,7 +485,7 @@ function updateChart(d,count) {
             .attr('y', function(index) {return yScaleFB(likes[index])})
             .attr('width', 30)
             .attr('height', function(index) {return fbHeight - yScaleFB(likes[index]);})
-            .attr('fill', function(index) {return colors[index];});
+            .attr('fill', 'purple');
 
          likes1 = [];
          max1 = 0;
@@ -491,5 +496,102 @@ function updateChart(d,count) {
 
 }
 
+function updateChart2(d,count) {
+    //xScaleFB.domain([d['actor_1_name'], d['actor_2_name'], d['actor_3_name'], d['director_name']]);
+    xScaleMoney.domain(['budget', 'gross']);
+
+    var tickLabels = ['Budget','Gross'];
+
+    var xAxis3 = d3.axisBottom(xScaleMoney);
+
+
+    if (count == 1) {
+        likes2.push(d.budget);
+        likes2.push(d.gross);
+        title1 = d['movie_title'];
+        max2 = d3.max(likes2);
+    }
+
+
+
+    if (count == 0) {
+        likes3.push(d.budget);
+        likes3.push(d.gross);
+        if(d3.max(likes) > max1) {
+            max2 = d3.max(likes3);
+            }
+    }
+
+
+
+    if (count == 0) {
+        yScaleMoney.domain([0, max2]);
+        var yAxis3 = d3.axisLeft(yScaleMoney).ticks(5);
+        chartG3.append('g')
+            .attr('class', 'x axis3')
+            .attr('transform', 'translate('+[0, fbHeight]+')')
+            .call(xAxis3.tickFormat(function(d) {
+
+                if (d == 'cast_total_facebook_likes') {
+                    return 'Cast Total';
+                }
+                if (d != 'director_name') {
+                    return d.charAt(0).toUpperCase() + d.substring(1, 7).replace(/_/, ' ');
+                } else {
+                    console.log(d.split(1, d.indexOf('_'))[0]);
+                    console.log(d);
+
+                    return d.charAt(0).toUpperCase() + d.substring(1, d.indexOf('_'));
+                }
+            }));
+
+        chartG3.append('g')
+            .attr('class', 'y axis3')
+            .call(yAxis3);
+
+        chartG3.append('text')
+            .attr('transform', 'translate(' + [fbWidth/2-240, fbHeight+40] + ')')
+            .text('Budget + Gross');
+
+
+        chartG3.append('text')
+            .attr('transform', 'translate(' + [-80,fbHeight/2 + 40] + ')rotate(270)')
+            .text('Dollars (USD)');
+
+        likeTypes = ['budget','gross'];
+        castNames = ['budget','gross'];
+        indices = [0, 1];
+        //scolors = ['#D52727', '#2BA02D', '#2079B5', '#FF800F', 'purple'];
+
+        chartG3.selectAll('.bars3')
+            .data(indices)
+            .enter()
+            .append('rect')
+            .attr('class', 'bars3')
+            .attr('x', function(index) {return -20 + xScaleMoney(castNames[index]) + xScaleMoney.bandwidth()/2 - 15;})
+            .attr('y', function(index) {return yScaleMoney(likes2[index])})
+            .attr('width', 30)
+            .attr('height', function(index) {return fbHeight - yScaleMoney(likes2[index]);})
+            .attr('fill', '#D52727');
+
+        chartG3.selectAll('.bars4')
+            .data(indices)
+            .enter()
+            .append('rect')
+            .attr('class', 'bars4')
+            .attr('x', function(index) {return 25 + xScaleMoney(castNames[index]) + xScaleMoney.bandwidth()/2 - 15;})
+            .attr('y', function(index) {return yScaleMoney(likes3[index])})
+            .attr('width', 30)
+            .attr('height', function(index) {return fbHeight - yScaleMoney(likes3[index]);})
+            .attr('fill', 'purple');
+
+         likes2 = [];
+         max2 = 0;
+         likes3 = [];
+
+    }
+
+
+}
 
 
