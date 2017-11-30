@@ -6,9 +6,16 @@
 }
 
 #hover {
-    position: relative;
+    position: fixed;
     top: 50px;
-    left: -480px;
+    left: 800px;
+    pointer-events: none;
+}
+
+#hover2 {
+    position: fixed;
+    top: 50px;
+    left: 1250px;
     pointer-events: none;
 }
 
