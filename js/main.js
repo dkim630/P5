@@ -7,13 +7,23 @@ var padding = {t: 50, r: 60, b: 40, l: 90};
 //chartG set up
 var chartG = svg.append('g')
     .attr('transform', 'translate('+[padding.l, padding.t]+')');
+
 //Overview Chart Set Up
 var overviewHeight =400;
 var overviewWidth = 400;
+
+var fbHeight = 250;
+var fbWidth = 750;
+
+
+
 //scales
 var xScaleOverview = d3.scaleLinear().range([0,overviewWidth]);
 var yScaleOverview = d3.scaleLinear().range([overviewHeight,0]);
 var radiusScale = d3.scaleLinear().range([0,2]);
+
+var xScaleFB = d3.scaleBand().rangeRound([0, fbWidth], .1);
+var yScaleFB = d3.scaleLinear().range([fbHeight, 0]);
 //add more
 var hover = d3.select('#hover')
     .attr("class", "tip");
@@ -75,7 +85,7 @@ function(error, dataset){
         });
     yScaleOverview.domain(votedExtent);
 
-    yAxis = d3.axisLeft(yScaleOverview).ticks(6)
+    yAxis = d3.axisLeft(yScaleOverview).ticks(6);
     gY = chartG.append('g')
         .attr('class','y axis')
         .attr('transform', 'translate(' +[-2,0]+' )')
@@ -207,7 +217,11 @@ function(error, dataset){
                 "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
                 "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
 
+                chartG2 = svg.append('g')
+                .attr('transform', 'translate('+[padding.l, overviewHeight + padding.t + 100]+')');
+                updateChart(d);
 
+                chartG2.style("visibility", "visible");
                 // .style("left", (d3.event.pageX) + "px")
                 // .style("top", (d3.event.pageY - 50) + "px");
         })
@@ -215,6 +229,8 @@ function(error, dataset){
             hover.transition()
                 .duration(1000)
                 .style("visibility", "hidden");
+
+            chartG2.remove();
         })
         .style('fill-opacity', 0.6)
         .attr('stroke', 'black');
@@ -234,6 +250,56 @@ function zoomed() {
     moviesEnter.attr("transform", d3.event.transform);
     gX.call(xAxis.scale(d3.event.transform.rescaleX(xScaleOverview)));
     gY.call(yAxis.scale(d3.event.transform.rescaleY(yScaleOverview)));
+}
+
+function updateChart(d) {
+    xScaleFB.domain([d['actor_1_name'], d['actor_2_name'], d['actor_3_name'], d['director_name']]);
+    var xAxis2 = d3.axisBottom(xScaleFB);
+
+    chartG2.append('g')
+        .attr('class', 'x axis2')
+        .attr('transform', 'translate('+[0, fbHeight]+')')
+        .call(xAxis2);
+
+    var likes = [];
+    likes.push(d.actor_1_facebook_likes);
+    likes.push(d.actor_2_facebook_likes);
+    likes.push(d.actor_3_facebook_likes);
+    likes.push(d.director_facebook_likes);
+
+    var maxLikes = d3.max(likes);
+
+    yScaleFB.domain([0, maxLikes]);
+    var yAxis2 = d3.axisLeft(yScaleFB).ticks(4);
+
+    chartG2.append('g')
+        .attr('class', 'y axis2')
+        .call(yAxis2);
+
+    chartG2.append('text')
+        .attr('transform', 'translate(' + [fbWidth/2 -40, fbHeight+40] + ')')
+        .text('Actors and Director');
+
+    chartG2.append('text')
+        .attr('transform', 'translate(' + [-60,fbHeight/2 + 40] + ')rotate(270)')
+        .text('Facebook Likes');
+
+    likeTypes = ['actor_1_facebook_likes', 'actor_2_facebook_likes', 'actor_3_facebook_likes', 'director_facebook_likes'];
+    castNames = ['actor_1_name', 'actor_2_name', 'actor_3_name', 'director_name'];
+    indices = [0, 1, 2, 3];
+    colors = ['#D52727', '#2BA02D', '#2079B5', '#FF800F'];
+
+    chartG2.selectAll('.bar')
+        .data(indices)
+        .enter()
+        .append('rect')
+        .attr('class', 'bar')
+        .attr('x', function(index) {return xScaleFB(d[castNames[index]]) + xScaleFB.bandwidth()/2 - 15;})
+        .attr('y', function(index) {return yScaleFB(d[likeTypes[index]])})
+        .attr('width', 30)
+        .attr('height', function(index) {return fbHeight - yScaleFB(d[likeTypes[index]]);})
+        .attr('fill', function(index) {return colors[index];});
+
 }
 
 

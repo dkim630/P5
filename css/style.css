@@ -31,7 +31,8 @@ rect.hovered {
 }
 
 body {
-    font-family: "Open Sans";
+    /*font-family: "Open Sans";*/
+    font-family: "Arial"
 }
 
 .title h3 {
