@@ -46,4 +46,14 @@ a {
     text-decoration: underline;
 }
 
+.select {
+    position:relative;
+    margin-left: 15px;
+    top: 45px;
+}
+
+svg {
+    top: 40px;
+}
+
 

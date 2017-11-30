@@ -8,7 +8,17 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+
     <div id="main">
+        <div class="select">
+            <label for="categorySelect">IMDB Score: </label>
+            <select class="custom-select" id="categorySelect" onchange="onCategoryChanged()">
+                <option selected value="all">All</option>
+                <option value="low">0 - 5</option>
+                <option value="middle">5 - 7</option>
+                <option value="high">7 - 10</option>
+            </select>
+        </div>
         <svg width="1000" height="870" style="border: 1px solid #777;">
         </svg>
     </div>

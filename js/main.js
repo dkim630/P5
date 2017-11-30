@@ -67,6 +67,8 @@ function(error, dataset){
         return;
     }
 
+    movieData = dataset;
+
     console.log(dataset);
 
     //axis setup for first overview dot plot
@@ -136,104 +138,106 @@ function(error, dataset){
     radiusScale.domain(imdbExtent);
     
     // var movies = chartG.selectAll('.dot')
-
-    var movies = view.selectAll('.dot')
-
-        .data(dataset);
-    moviesEnter = movies.enter()
-        .append('circle')
-        .attr('class','dots');
-        // .attr('clip-path', 'url(#clip)');
-
-    moviesEnter
-        .attr('cy',function(d) {
-            return yScaleOverview(d['num_voted_users']);
-            })
-        .attr('cx',function(d) {
-            return xScaleOverview(d['gross']);
-            })
-        .attr('fill', function(d) {
-            if(d['imdb_score'] <=1 ) {
-                return '#660000';
-                }
-            else if(d['imdb_score'] <= 2 ) {
-                return '#990000';
-            }
-            else if(d['imdb_score'] <= 3 ) {
-                return '#CC0000';
-            }
-            else if(d['imdb_score'] <= 4) {
-                return '#FF3300';
-            }
-            else if(d['imdb_score'] <= 5 ) {
-                return '#FF6600';
-            }
-            else if(d['imdb_score'] <= 6) {
-                return '#FFCC00';
-            }
-            else if(d['imdb_score'] <= 7) {
-                return '#FFFF00';
-            }
-            else if(d['imdb_score'] <= 8) {
-                return '#003300';
-            }
-            else if(d['imdb_score'] <= 9) {
-                return '#009900';
-            }
-            else if(d['imdb_score'] <= 10) {
-                return '#00FF00';
-            }
-            })
-        .attr('r',function(d) {
-            return 3;
-            })
-
-        .on("mouseover", function(d) {
-            hover.transition()
-                .duration(1000)
-                .style("visibility", "visible");
-            hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
-                "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
-                "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
-                "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
-                "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
-                "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
-                "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
-                "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
-                "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
-                "<strong>Duration: </strong>" + d['duration'] +"<br />" +
-                "<strong>Gross: </strong>" + d['gross'] +"<br />" +
-                "<strong>Genres: </strong>" + d['genres'] +"<br />" +
-                "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
-                "<strong>Country: </strong>" + d['country'] +"<br />" +
-                // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
-                // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
-                "<strong>Content Rating: </strong>" + d['content_rating'] +"<br />" +
-                "<strong>Budget: </strong>" + d['budget'] +"<br />" +
-                "<strong>Title Year: </strong>" + d['title_year'] +"<br />" +
-                "<strong>IMDB Score: </strong>" + d['imdb_score'] +"<br />" +
-                "<strong>Movie Facebook Likes: </strong>" + d['movie_facebook_likes'] +"<br />" +
-                "<strong>Number of Voted Users: </strong>" + d['num_voted_users'] +"<br />" +
-                "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
-                "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
-
-                chartG2 = svg.append('g')
-                .attr('transform', 'translate('+[padding.l, overviewHeight + padding.t + 100]+')');
-                updateChart(d);
-
-                chartG2.style("visibility", "visible");
-                // .style("left", (d3.event.pageX) + "px")
-                // .style("top", (d3.event.pageY - 50) + "px");
-        })
-        .on("mouseout", function(d) {
-            hover.transition()
-                .duration(1000)
-                .style("visibility", "hidden");
-
-            chartG2.remove();
-        })
-        .style('fill-opacity', 0.6)
-        .attr('stroke', 'black');
+    filterChart("all");
+    // var movies = view.selectAll('.dot')
+    //
+    //     .data(dataset, function(d) {
+    //         return d.movie_title;
+    //     });
+    // moviesEnter = movies.enter()
+    //     .append('circle')
+    //     .attr('class','dots');
+    //     // .attr('clip-path', 'url(#clip)');
+    //
+    // moviesEnter
+    //     .attr('cy',function(d) {
+    //         return yScaleOverview(d['num_voted_users']);
+    //         })
+    //     .attr('cx',function(d) {
+    //         return xScaleOverview(d['gross']);
+    //         })
+    //     .attr('fill', function(d) {
+    //         if(d['imdb_score'] <=1 ) {
+    //             return '#660000';
+    //             }
+    //         else if(d['imdb_score'] <= 2 ) {
+    //             return '#990000';
+    //         }
+    //         else if(d['imdb_score'] <= 3 ) {
+    //             return '#CC0000';
+    //         }
+    //         else if(d['imdb_score'] <= 4) {
+    //             return '#FF3300';
+    //         }
+    //         else if(d['imdb_score'] <= 5 ) {
+    //             return '#FF6600';
+    //         }
+    //         else if(d['imdb_score'] <= 6) {
+    //             return '#FFCC00';
+    //         }
+    //         else if(d['imdb_score'] <= 7) {
+    //             return '#FFFF00';
+    //         }
+    //         else if(d['imdb_score'] <= 8) {
+    //             return '#003300';
+    //         }
+    //         else if(d['imdb_score'] <= 9) {
+    //             return '#009900';
+    //         }
+    //         else if(d['imdb_score'] <= 10) {
+    //             return '#00FF00';
+    //         }
+    //         })
+    //     .attr('r',function(d) {
+    //         return 3;
+    //         })
+    //
+    //     .on("mouseover", function(d) {
+    //         hover.transition()
+    //             .duration(1000)
+    //             .style("visibility", "visible");
+    //         hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
+    //             "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
+    //             "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+    //             "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
+    //             "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+    //             "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
+    //             "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+    //             "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
+    //             "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+    //             "<strong>Duration: </strong>" + d['duration'] +"<br />" +
+    //             "<strong>Gross: </strong>" + d['gross'] +"<br />" +
+    //             "<strong>Genres: </strong>" + d['genres'] +"<br />" +
+    //             "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
+    //             "<strong>Country: </strong>" + d['country'] +"<br />" +
+    //             // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
+    //             // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
+    //             "<strong>Content Rating: </strong>" + d['content_rating'] +"<br />" +
+    //             "<strong>Budget: </strong>" + d['budget'] +"<br />" +
+    //             "<strong>Title Year: </strong>" + d['title_year'] +"<br />" +
+    //             "<strong>IMDB Score: </strong>" + d['imdb_score'] +"<br />" +
+    //             "<strong>Movie Facebook Likes: </strong>" + d['movie_facebook_likes'] +"<br />" +
+    //             "<strong>Number of Voted Users: </strong>" + d['num_voted_users'] +"<br />" +
+    //             "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
+    //             "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
+    //
+    //             chartG2 = svg.append('g')
+    //             .attr('transform', 'translate('+[padding.l, overviewHeight + padding.t + 100]+')');
+    //             updateChart(d);
+    //
+    //             chartG2.style("visibility", "visible");
+    //             // .style("left", (d3.event.pageX) + "px")
+    //             // .style("top", (d3.event.pageY - 50) + "px");
+    //     })
+    //     .on("mouseout", function(d) {
+    //         hover.transition()
+    //             .duration(1000)
+    //             .style("visibility", "hidden");
+    //
+    //         chartG2.remove();
+    //     })
+    //     .style('fill-opacity', 0.6)
+    //     .attr('stroke', 'black');
 
 
 
@@ -247,9 +251,10 @@ function(error, dataset){
 
 function zoomed() {
     // view.attr("transform", d3.event.transform);
-    moviesEnter.attr("transform", d3.event.transform);
     gX.call(xAxis.scale(d3.event.transform.rescaleX(xScaleOverview)));
     gY.call(yAxis.scale(d3.event.transform.rescaleY(yScaleOverview)));
+    moviesEnter.attr("transform", d3.event.transform);
+
 }
 
 function updateChart(d) {
@@ -299,7 +304,128 @@ function updateChart(d) {
         .attr('width', 30)
         .attr('height', function(index) {return fbHeight - yScaleFB(d[likeTypes[index]]);})
         .attr('fill', function(index) {return colors[index];});
+}
 
+function onCategoryChanged() {
+    var select = d3.select('#categorySelect').node();
+    var category = select.options[select.selectedIndex].value;
+    filterChart(category);
+}
+
+function filterChart(category) {
+    var filtered = movieData.filter(function(d) {
+        if (category == "low") {
+            return d.imdb_score >= 0 && d.imdb_score < 5;
+        } else if (category == "middle") {
+            return d.imdb_score >= 5 && d.imdb_score < 7;
+        } else if (category == "high") {
+            return d.imdb_score >= 7 && d.imdb_score <= 10;
+        } else {
+            return true;
+        }
+    })
+
+    movies = view.selectAll('.dot')
+        .data(filtered, function(d) {
+            return d.movie_title;
+        });
+
+    moviesEnter = movies.enter()
+        .append('circle')
+        .attr('class','dot');
+    // .attr('clip-path', 'url(#clip)');
+
+    moviesEnter
+        .attr('cy',function(d) {
+            return yScaleOverview(d['num_voted_users']);
+        })
+        .attr('cx',function(d) {
+            return xScaleOverview(d['gross']);
+        })
+        .attr('fill', function(d) {
+            if(d['imdb_score'] <=1 ) {
+                return '#660000';
+            }
+            else if(d['imdb_score'] <= 2 ) {
+                return '#990000';
+            }
+            else if(d['imdb_score'] <= 3 ) {
+                return '#CC0000';
+            }
+            else if(d['imdb_score'] <= 4) {
+                return '#FF3300';
+            }
+            else if(d['imdb_score'] <= 5 ) {
+                return '#FF6600';
+            }
+            else if(d['imdb_score'] <= 6) {
+                return '#FFCC00';
+            }
+            else if(d['imdb_score'] <= 7) {
+                return '#FFFF00';
+            }
+            else if(d['imdb_score'] <= 8) {
+                return '#003300';
+            }
+            else if(d['imdb_score'] <= 9) {
+                return '#009900';
+            }
+            else if(d['imdb_score'] <= 10) {
+                return '#00FF00';
+            }
+        })
+        .attr('r',function(d) {
+            return 3;
+        })
+
+        .on("mouseover", function(d) {
+            hover.transition()
+                .duration(1000)
+                .style("visibility", "visible");
+            hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
+                "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
+                "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+                "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
+                "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+                "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
+                "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+                "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
+                "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+                "<strong>Duration: </strong>" + d['duration'] +"<br />" +
+                "<strong>Gross: </strong>" + d['gross'] +"<br />" +
+                "<strong>Genres: </strong>" + d['genres'] +"<br />" +
+                "<strong>Cast Total Facebook Likes: </strong>" + d['cast_total_facebook_likes'] +"<br />" +
+                "<strong>Country: </strong>" + d['country'] +"<br />" +
+                // "<strong>Plot Keywords: </strong>" + d['plot_keywords'] +"<br />" +
+                // "<strong>IMDB Link: </strong>" + d['movie_imdb_link'] +"<br />" +
+                "<strong>Content Rating: </strong>" + d['content_rating'] +"<br />" +
+                "<strong>Budget: </strong>" + d['budget'] +"<br />" +
+                "<strong>Title Year: </strong>" + d['title_year'] +"<br />" +
+                "<strong>IMDB Score: </strong>" + d['imdb_score'] +"<br />" +
+                "<strong>Movie Facebook Likes: </strong>" + d['movie_facebook_likes'] +"<br />" +
+                "<strong>Number of Voted Users: </strong>" + d['num_voted_users'] +"<br />" +
+                "<strong>Number of Critics for Reviews: </strong>" + d['num_critic_for_reviews'] +"<br />" +
+                "<strong>Number of Users for Reviews: </strong>" + d['num_user_for_reviews'] +"<br />");
+
+            chartG2 = svg.append('g')
+                .attr('transform', 'translate('+[padding.l, overviewHeight + padding.t + 100]+')');
+            updateChart(d);
+
+            chartG2.style("visibility", "visible");
+            // .style("left", (d3.event.pageX) + "px")
+            // .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseout", function(d) {
+            hover.transition()
+                .duration(1000)
+                .style("visibility", "hidden");
+
+            chartG2.remove();
+        })
+        .style('fill-opacity', 0.6)
+        .attr('stroke', 'black');
+
+    movies.exit().remove();
 }
 
 
