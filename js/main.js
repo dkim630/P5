@@ -94,6 +94,19 @@ function(error, dataset){
     .attr('y', -50)
     .attr('x', -100)
 
+    chartG.append('rect')
+    .style('fill','slategray')
+    .attr('width', fbWidth+105)
+    .attr('height', fbHeight*2)
+    .attr('y', overviewHeight+75)
+    .attr('x', -100)
+
+    chartG.append('rect')
+    .style('fill','silver')
+    .attr('width', fbWidth/2+105)
+    .attr('height', fbHeight*2)
+    .attr('y', overviewHeight+75)
+    .attr('x', fbWidth+5)
 
     //axis setup for first overview dot plot
     var grossExtent = d3.extent(dataset, function(d) {
@@ -124,6 +137,9 @@ function(error, dataset){
         .attr('transform', 'translate(' + [-60,overviewHeight/2+40] + ')rotate(270)')
         .text('Number of Votes');
 
+    chartG.append('text')
+        .attr('transform', 'translate(' + [overviewWidth/2-120,-20] + ')')
+        .text('Movies: Gross vs Number of Votes');
 
     view = chartG.append("g")
         .attr("class", "view")
@@ -286,13 +302,13 @@ function filterChart(category) {
                     .style("visibility", "visible");
                 hover.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
                     "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
-                    //"<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+                    "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
                     "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
-                    //"<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+                    "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
                     "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
-                    //"<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+                    "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
                     "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
-                   // "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+                    "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
                     "<strong>Duration: </strong>" + d['duration'] +"<br />" +
                     "<strong>Gross: </strong>" + d['gross'] +"<br />" +
                     "<strong>Genres: </strong>" + d['genres'] +"<br />" +
@@ -328,13 +344,13 @@ function filterChart(category) {
                         .style("visibility", "visible");
                     hover2.html("<strong>Movie Title: </strong>" + d['movie_title'] +"<br />" +
                         "<strong>Actor 1: </strong>" + d['actor_1_name'] +"<br />" +
-                        //"<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
+                        "<strong>Actor 1 Facebook Likes: </strong>" + d['actor_1_facebook_likes'] +"<br />" +
                         "<strong>Actor 2: </strong>" + d['actor_2_name'] +"<br />" +
-                        //"<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
+                        "<strong>Actor 2 Facebook Likes: </strong>" + d['actor_2_facebook_likes'] +"<br />" +
                         "<strong>Actor 3: </strong>" + d['actor_3_name'] +"<br />" +
-                        //"<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
+                        "<strong>Actor 3 Facebook Likes: </strong>" + d['actor_3_facebook_likes'] +"<br />" +
                         "<strong>Director Name: </strong>" + d['director_name'] +"<br />" +
-                        //"<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
+                        "<strong>Director Facebook Likes: </strong>" + d['director_facebook_likes'] +"<br />" +
                         "<strong>Duration: </strong>" + d['duration'] +"<br />" +
                         "<strong>Gross: </strong>" + d['gross'] +"<br />" +
                         "<strong>Genres: </strong>" + d['genres'] +"<br />" +
@@ -449,6 +465,9 @@ function updateChart(d,count) {
             .attr('fill', 'purple')
             .attr('y', fbHeight + 65);
 
+        chartG2.append('text')
+            .attr('transform', 'translate(' + [160, -10] + ')')
+            .text('Comparision of Cast Facebook Likes');
 
         chartG2.append('text')
             .attr('transform', 'translate(' + [60, fbHeight+57] + ')')
@@ -558,6 +577,9 @@ function updateChart2(d,count) {
             .attr('transform', 'translate(' + [fbWidth/2-240, fbHeight+40] + ')')
             .text('Budget + Gross');
 
+        chartG3.append('text')
+            .attr('transform', 'translate(' + [fbWidth/2-330, -10] + ')')
+            .text('Comparision of Budget and Gross');
 
         chartG3.append('text')
             .attr('transform', 'translate(' + [-80,fbHeight/2 + 40] + ')rotate(270)')
