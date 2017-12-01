@@ -89,7 +89,7 @@ function(error, dataset){
     //set up background boxes
     chartG.append('rect')
     .style('fill','grey')
-    .attr('width', overviewWidth+150)
+    .attr('width', overviewWidth+180)
     .attr('height', overviewHeight+120)
     .attr('y', -50)
     .attr('x', -100)
@@ -140,6 +140,46 @@ function(error, dataset){
     chartG.append('text')
         .attr('transform', 'translate(' + [overviewWidth/2-120,-20] + ')')
         .text('Movies: Gross vs Number of Votes');
+
+    //legend
+    var legendcolor = ['#660000','#990000', '#CC0000', '#FF3300', '#FF6600', '#FFCC00',
+        '#FFFF00', '#003300','#009900', '#00FF00'];
+
+    var legendText = ['<=1','<=2', '<=3', '<=4', '<=5', '<=6',
+        '<=7', '<=8','<=9', '<=10'];
+
+    chartG.append('text')
+        .attr('x', overviewWidth+25)
+        .attr('y', -25)
+        .text('IMDB')
+        .attr('font-size',14);
+
+    chartG.append('text')
+        .attr('x', overviewWidth+25)
+        .attr('y', -10)
+        .text('Score')
+        .attr('font-size',14);
+    for (index = 0; index < 10; index++) {
+        chartG.append('rect')
+            .style('fill', function(d) {
+                return legendcolor[index];
+                })
+            .attr('width',15)
+            .attr('height', 15)
+            .attr('x',overviewWidth+25)
+            .attr('y', function(d) {
+                console.log(d);
+                return index*20});
+    }
+
+    for (index = 0; index < 10; index++) {
+        chartG.append('text')
+            .attr('x', overviewWidth+40)
+            .attr('y', 12 + index * 20)
+            .text(legendText[index])
+            .attr('font-size', 12);
+    }
+
 
     view = chartG.append("g")
         .attr("class", "view")
