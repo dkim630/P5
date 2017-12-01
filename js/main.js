@@ -59,7 +59,7 @@ function(row){
         actor_3_facebook_likes : +row.actor_3_facebook_likes,
         gross : +row.gross,
         genres : row.genres,
-        movie_title : row.movie_title,
+        movie_title : row.movie_title.replace(/[^\x00-\x7F]/g, ""),
         num_voted_users : +row.num_voted_users,
         cast_total_facebook_likes : +row.cast_total_facebook_likes,
         plot_keywords : row.plot_keywords,
@@ -97,6 +97,7 @@ function(error, dataset){
 
     //axis setup for first overview dot plot
     var grossExtent = d3.extent(dataset, function(d) {
+        console.log(d.movie_title)
         return d['gross'];
         });
     xScaleOverview.domain(grossExtent);
